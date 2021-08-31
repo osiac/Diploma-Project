@@ -1,0 +1,55 @@
+import paho.mqtt.client as mqttclient
+import time
+import Actuatoare
+
+broker="mqtt.beia-telemetrie.ro"
+port=1883
+mesaj2=" "
+def on_connect(client, userdata, flags, rc):
+    if rc==0:
+        print("client is connected")
+        global connected
+        connected=True
+    else:
+        print("client is not connected")
+def on_message(client, userdata,message):
+#     print("Message recived"+ str(message.payload.decode("utf-8")))
+#     print("Topic"+str(message.topic))
+    #global mesaj
+    mesaj = str(message.payload.decode("utf-8"))
+    global mesaj2
+    mesaj2= mesaj
+    print(mesaj)
+    #return mesaj
+
+Messagerecieved= False
+connected= False
+client = mqttclient.Client("MQTT")
+client.on_message=on_message
+client.connect(broker,port=port)
+client.on_connect=on_connect
+client.subscribe("training/device/F")
+
+client.loop_start()
+while Messagerecieved != True:
+    time.sleep(0.1)
+    if (mesaj2 == "Oprit_ventilator"):
+        Actuatoare.ventilator_on()
+    if (mesaj2 == "Pornit_ventilator"):
+        Actuatoare.ventilator_off()
+    if (mesaj2 == "Pornit_led_interior"):
+        Actuatoare.lumina_aprinsa()
+    if (mesaj2 == "Oprit_led_interior"):
+        Actuatoare.lumina_stinsa()
+    if (mesaj2 == "Pornit_led_exterior"):
+        Actuatoare.lumina_exterior_aprinsa()
+    if (mesaj2 == "Oprit_led_exterior"):    
+        Actuatoare.lumina_exterior_inchisa()
+    if (mesaj2 == "Oprit_pompa"):
+        Actuatoare.pompa_apa_off()
+    if (mesaj2 == "Pornit_pompa"):
+        Actuatoare.pompa_apa_on()
+client.loop_stop()
+
+          
+

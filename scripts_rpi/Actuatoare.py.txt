@@ -1,0 +1,38 @@
+# Import libraries 
+import RPi.GPIO as GPIO
+from time import sleep 
+
+
+GPIO.setmode(GPIO.BCM)
+pomp = 16
+ventilator = 20
+led1=11
+led2=13
+GPIO.setup(led1, GPIO.OUT)
+GPIO.setup(led2, GPIO.OUT)
+GPIO.setup(pomp, GPIO.OUT)
+GPIO.setup(ventilator, GPIO.OUT)
+
+
+
+#pompa apa
+def pompa_apa_on():
+    GPIO.output(pomp,GPIO.LOW)
+def pompa_apa_off():
+    GPIO.output(pomp,GPIO.HIGH)
+#ventilator
+def ventilator_on():
+    GPIO.output(ventilator,GPIO.LOW)
+def ventilator_off():
+    GPIO.output(ventilator,GPIO.HIGH)
+def lumina_aprinsa():
+    GPIO.output(led1,GPIO.HIGH)
+def lumina_stinsa():
+    GPIO.output(led1,GPIO.LOW)
+def lumina_exterior_aprinsa():
+    GPIO.output(led2,GPIO.HIGH)
+def lumina_exterior_inchisa():
+    GPIO.output(led2,GPIO.LOW)
+
+
+
